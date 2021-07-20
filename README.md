@@ -1,3 +1,3 @@
 Testing Github Pages
 
-https://helopon.github.io/github.io/
+https://helopon.github.io/sheet2gmap/
