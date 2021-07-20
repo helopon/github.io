@@ -84,7 +84,7 @@
           map: map
         });
 
-        var info = '<div style="font-size:18px;font-weight:bold;margin-bottom:10px;">' + data['メッセージ'] + '</div>' + data['日付'] + '</div>' + data['時刻'] + '</div>' + data['住所'] + '</div>' + data['緯度'] + '</div>' + data['経度'] + '</div>' + data['URL'] + '</div>';
+        var info = '<div style="font-size:18px;font-weight:bold;margin-bottom:10px;">' + data['メッセージ'] + '</div>' + <img src=data['URL'] align='left' /> + data['日付'] + '</div>' + data['時刻'] + '</div>' + data['住所'] + '</div>' + data['緯度'] + '</div>' + data['経度'] + '</div>' + data['URL'] + '</div>';
         infoWindow[i] = new google.maps.InfoWindow({
           content: info
         });
