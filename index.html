@@ -88,7 +88,7 @@
         //var info = '<div style="font-size:18px;font-weight:bold;margin-bottom:10px;">' + data['メッセージ'] + '</div>' + data['日付'] + data['時刻'] + data['住所'] + data['緯度'] + data['経度'] + data['URL'];
         //var info = '<div style="font-size:18px;font-weight:bold;margin-bottom:10px;">' + data['メッセージ'] + '</div>' + '<IMG SRC="https://drive.google.com/uc?id=1LE9QKyZNtHOqo_hY9xw4u3Y5GMvcbaXw"/>';
         var imgsrc = 'https://drive.google.com/uc?id=' + data['画像ID'];
-        var info = '<div style="font-size:18px;font-weight:bold;margin-bottom:10px;">' + data['メッセージ'] + '</div>' + '<p>' + data['日付'] + '</p>' + '<p>' + data['時刻'] + '</p>' + '<p>' + data['住所'] + '</p>' + '<IMG SRC="' + imgsrc + '" hight="400">';
+        var info = '<div style="font-size:18px;font-weight:bold;margin-bottom:10px;">' + data['メッセージ'] + '</div>' + '<p>' + data['日付'] + '</p>' + '<p>' + data['時刻'] + '</p>' + '<p>' + data['住所'] + '</p>' + '<img src="' + imgsrc + '" height="400">';
         
         infoWindow[i] = new google.maps.InfoWindow({
           content: info
