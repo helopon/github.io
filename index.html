@@ -28,10 +28,8 @@
   </head>
   <body>
     <div id="map"></div>
-    <td><div id="sidebar"></div></td>
-    <script src="constants.js"></script>
+    <!-- <td><div id="sidebar"></div></td> -->
     <script src="https://maps.googleapis.com/maps/api/js?language=ja&region=JP&key=AIzaSyAIoz6kASLTG4q4vw9ZBzW9VfhMogbdpc4&callback=initMap" async defer></script>
-<!--     <script src="https://maps.googleapis.com/maps/api/js?language=ja&region=JP&callback=initMap" async defer></script> -->
     <script>
       var map;
       var marker = [];
@@ -63,7 +61,6 @@
         });
 
         var request = new XMLHttpRequest();
-        <!-- request.open('GET', `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/sheet1?key=${API_KEY}`, true); -->
         request.open('GET', `https://sheets.googleapis.com/v4/spreadsheets/1IoLEz-BBe3neez95T0d03QGME7V6JkEoWAyJUfZYgXc/values/sheet1?key=AIzaSyAIoz6kASLTG4q4vw9ZBzW9VfhMogbdpc4`, true);
         request.responseType = 'json';
 
@@ -115,8 +112,6 @@
           sidebar_html = elements.join("\n");
         }
 
-        //document.getElementById("sidebar").innerHTML = `<a target="_blank" href="https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?usp=sharing">元データ(Google スプレッドシート)</a><br /><a target="_blank" href="https://github.com/helopon/map">ソースコード(GitHub)</a><br /><br />最新15ヶ所だけを表示<br />` + sidebar_html;
-        //document.getElementById("sidebar").innerHTML = sidebar_html;
         document.getElementById("sidebar").innerHTML = `<a target="_blank" href="https://docs.google.com/spreadsheets/d/1IoLEz-BBe3neez95T0d03QGME7V6JkEoWAyJUfZYgXc/edit?usp=sharing">元データ(Google スプレッドシート)</a><br /><a target="_blank" href="https://github.com/helopon/map">ソースコード(GitHub)</a><br /><br />最新15ヶ所だけを表示<br />` + sidebar_html;
       }
 
