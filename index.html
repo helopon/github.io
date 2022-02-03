@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="jp">
     <!-- ------------------------------------------------------ -->
-    <!-- HTMLヘッダ -->
+    <!-- CSS -->
     <!-- ------------------------------------------------------ -->
     <head>
         <meta charset="utf-8">
@@ -30,6 +30,12 @@
                 background-color: white;
                 font-family: Meriyo UI;
                 font-size: 14px;
+            }
+            p.sidebarlink {
+                color: blue;
+                text-decoration:underline;
+                /* pointer-events: none;
+                text-decoration: none; */
             }
         </style>
     </head>
@@ -110,7 +116,10 @@
                     var date = markerData[i]['日付時刻'];
                     //var addr = markerData[i]['住所'];
                     //elements.push(`<b>${i + 1}</b> <a href="javascript:openWindow(${i})">${name}${date}${addr}<\/a><br />`);
-                    elements.push(`<b>${i + 1}</b> <a href="javascript:openWindow(${i})">${date}<\/a><br />`);
+                    //elements.push(`<b>${i + 1}</b> <a href="javascript:void(${i});" onclick="openWindow(${i})">${date}<\/a><br />`);    //ポップアップOK 新規ウィンドウ開く
+                    //elements.push(`<b>${i + 1}</b> <a onclick="openWindow(${i})">${date}<\/a><br />`);    //ポップアップOK 新規ウィンドウ開かない リンクではない
+                    //elements.push(`<b>${i + 1}</b> <a onclick="openWindow(${i})"> <p class="sidebarlink">${date}</p></a>`);
+                    elements.push(`<b>${i + 1}</b> <a href="javascript:void(${i});" onclick="openWindow(${i})">${date}</a><br/>`);
                 }
                 var sidebar_html = null;
                 //サイドバー表示項目数
@@ -141,7 +150,8 @@
 
                 // マーカー吹き出し設定
                 var imgsrc = 'https://drive.google.com/uc?id=' + data['画像ID'];
-                var info = '<div style="font-size:18px;font-weight:bold;margin-bottom:10px;">' + data['メッセージ'] + '</div>' + '<p>' + data['日付'] + '</p>' + '<p>' + data['時刻'] + '</p>' + '<p>' + data['住所'] + '</p>' + '<img src="' + imgsrc + '" height="400">';
+                //var info = '<div style="font-size:18px;font-weight:bold;margin-bottom:10px;">' + data['メッセージ'] + '</div>' + '<p>' + data['日付'] + '</p>' + '<p>' + data['時刻'] + '</p>' + '<p>' + data['住所'] + '</p>' + '<img src="' + imgsrc + '" height="400">';
+                var info = '<div style="font-size:18px;font-weight:bold;margin-bottom:10px;">' + data['メッセージ'] + '</div>' + '<p>' + data['日付'] + '</p>' + '<p>' + data['時刻'] + '</p>' + '<p>' + data['住所'] + '</p>' + '<img src="' + imgsrc + '" height="200">';
                 infoWindow[i] = new google.maps.InfoWindow({
                     content: info
                 });
@@ -152,7 +162,7 @@
             // マーカークリックイベント
             //------------------------------------------------------
             function markerEvent(i) {
-                marker[i].addListener('click', function() {
+                marker[i].addListener('click', function(){
                     openWindow(i);
                 });
             }
@@ -167,7 +177,7 @@
                 infoWindow[i].open(map, marker[i]);
                 windowOpened = infoWindow[i];
             }
-      </script>
+        </script>
     </body>
 </html>
 
