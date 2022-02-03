@@ -1,134 +1,171 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>map</title>
-    <style>
-      #map {
-        height: 100%;
-      }
-      html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-      #sidebar {
-        position: absolute;
-        top: 10%;
-        left: 80%;
-        width: 15%;
-        height: 80%;
-        border: 1px solid #666;
-        padding: 6px;
-        background-color: white;
-        font-family: Meriyo UI;
-        font-size: 14px;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="map"></div>
-    <td><div id="sidebar"></div></td>
-    <script src="https://maps.googleapis.com/maps/api/js?language=ja&region=JP&key=AIzaSyAIoz6kASLTG4q4vw9ZBzW9VfhMogbdpc4&callback=initMap" async defer></script>
-    <script>
-      var map;
-      var marker = [];
-      var infoWindow = [];
-      var windowOpened;
+<html lang="jp">
+    <!-- ------------------------------------------------------ -->
+    <!-- HTMLヘッダ -->
+    <!-- ------------------------------------------------------ -->
+    <head>
+        <meta charset="utf-8">
+        <title>map</title>
+        <style>
+            /* マップ表示スタイル */
+            #map {
+                height: 100%;
+            }
+            /* ページ表示スタイル */
+            html, body {
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            /* サイドバー表示スタイル */
+            #sidebar {
+                position: absolute;
+                top: 10%;
+                left: 80%;
+                width: 15%;
+                height: 80%;
+                border: 1px solid #666;
+                padding: 6px;
+                background-color: white;
+                font-family: Meriyo UI;
+                font-size: 14px;
+            }
+        </style>
+    </head>
+    <!-- ------------------------------------------------------ -->
+    <!-- HTMLボディ -->
+    <!-- ------------------------------------------------------ -->
+    <body>
+        <div id="map"></div>
+        <td><div id="sidebar"></div></td>
+        <script src="https://maps.googleapis.com/maps/api/js?language=ja&region=JP&key=AIzaSyAIoz6kASLTG4q4vw9ZBzW9VfhMogbdpc4&callback=initMap" async defer></script>
+        <script>
+            var map;
+            var marker = [];
+            var infoWindow = [];
+            var windowOpened;
 
-      function parseData(data) {
-        var keys = data.values[0];
-        var markerData = [];
-        data.values.forEach(function(value, i) {
-          if (i > 0) {
-            var hash = {};
-            value.forEach(function(d, j) {
-              hash[keys[j]] = d;
-            });
-            markerData.push(hash);
-          }
-        });
-        return markerData;
-      }
+            //------------------------------------------------------
+            // 初期設定
+            //------------------------------------------------------
+            function initMap() {
+                var target = document.getElementById('map');
 
-      function initMap() {
-        var target = document.getElementById('map');
-        var centerp = {lat: 35.6679191, lng: 139.4606805};
+                //マップ表示設定
+                //var centerp = {lat: 35.6839659, lng: 139.774327};    //東京日本橋
+                var centerp = {lat: 35.3911538, lng: 136.720005};     //岐阜県庁
+                map = new google.maps.Map(target, {
+                    center: centerp,
+                    zoom: 7,
+                });
 
-        map = new google.maps.Map(target, {
-          center: centerp,
-          zoom: 7,
-        });
+                // スプレッドシートからデータ取得
+                var request = new XMLHttpRequest();
+                request.open('GET', `https://sheets.googleapis.com/v4/spreadsheets/1IoLEz-BBe3neez95T0d03QGME7V6JkEoWAyJUfZYgXc/values/sheet1?key=AIzaSyAIoz6kASLTG4q4vw9ZBzW9VfhMogbdpc4`, true);
+                request.responseType = 'json';
+                request.onload = function () {
+                    var data = this.response;
+                    var markerData = parseData(data);
+                    setData(markerData);
+                };
 
-        var request = new XMLHttpRequest();
-        request.open('GET', `https://sheets.googleapis.com/v4/spreadsheets/1IoLEz-BBe3neez95T0d03QGME7V6JkEoWAyJUfZYgXc/values/sheet1?key=AIzaSyAIoz6kASLTG4q4vw9ZBzW9VfhMogbdpc4`, true);
-        request.responseType = 'json';
+                request.send();
+            }
+          
+            //------------------------------------------------------
+            // スプレッドシートデータ解析
+            //------------------------------------------------------
+            function parseData(data) {
+                var keys = data.values[0];
+                var markerData = [];
+                data.values.forEach(function(value, i) {
+                    if (i > 0) {
+                        var hash = {};
+                        value.forEach(function(d, j) {
+                            hash[keys[j]] = d;
+                        });
+                        markerData.push(hash);
+                    }
+                });
+              return markerData;
+            }
 
-        request.onload = function () {
-          var data = this.response;
-          var markerData = parseData(data);
-          setData(markerData);
-        };
+            //------------------------------------------------------
+            // スプレッドシートデータ取得
+            //------------------------------------------------------
+            function setData(markerData){
+                var elements = [];
+                // 最後のレコードまでループ
+                for (var i = 0; i < markerData.length; i++) {
+                    // データが無ければなにもしない
+                    if (!markerData[i]['緯度']) {
+                        continue;
+                    }
+                    // マーカー0表示
+                    addMarker(i, markerData[i]);
+                    
+                    //サイドバー表示項目
+                    //var name = markerData[i]['メッセージ'];
+                    var date = markerData[i]['日付時刻'];
+                    //var addr = markerData[i]['住所'];
+                    //elements.push(`<b>${i + 1}</b> <a href="javascript:openWindow(${i})">${name}${date}${addr}<\/a><br />`);
+                    elements.push(`<b>${i + 1}</b> <a href="javascript:openWindow(${i})">${date}<\/a><br />`);
+                }
+                var sidebar_html = null;
+                //サイドバー表示項目数
+                if (elements.length > 15) {
+                    sidebar_html = elements.slice(elements.length - 15).join("\n");
+                } else {
+                    sidebar_html = elements.join("\n");
+                }
+                
+                // サイドバー表示
+                document.getElementById("sidebar").innerHTML = `<a target="_blank" href="https://docs.google.com/spreadsheets/d/1IoLEz-BBe3neez95T0d03QGME7V6JkEoWAyJUfZYgXc/edit?usp=sharing">元データ(Google スプレッドシート)</a><br /><a target="_blank" href="https://github.com/helopon/map">ソースコード(GitHub)</a><br /><br />最新30ヶ所だけを表示<br />` + sidebar_html;
+            }
 
-        request.send();
-      }
+            //------------------------------------------------------
+            // マーカー表示
+            //------------------------------------------------------
+            function addMarker(i, data) {
+                // 緯度経度取得
+                var markerLngLat = new google.maps.LatLng({
+                    lng: Number(data['経度']),
+                    lat: Number(data['緯度'])
+                });
+                marker[i] = new google.maps.Marker({
+                    position: markerLngLat,
+                    map: map
+                });
 
-      function addMarker(i, data) {
-        var markerLatLng = new google.maps.LatLng({
-          lat: Number(data['緯度']),
-          lng: Number(data['経度'])
-        });
-        marker[i] = new google.maps.Marker({
-          position: markerLatLng,
-          map: map
-        });
+                // マーカー吹き出し設定
+                var imgsrc = 'https://drive.google.com/uc?id=' + data['画像ID'];
+                var info = '<div style="font-size:18px;font-weight:bold;margin-bottom:10px;">' + data['メッセージ'] + '</div>' + '<p>' + data['日付'] + '</p>' + '<p>' + data['時刻'] + '</p>' + '<p>' + data['住所'] + '</p>' + '<img src="' + imgsrc + '" height="400">';
+                infoWindow[i] = new google.maps.InfoWindow({
+                    content: info
+                });
+                markerEvent(i);
+            }
 
-        var imgsrc = 'https://drive.google.com/uc?id=' + data['画像ID'];
-        var info = '<div style="font-size:18px;font-weight:bold;margin-bottom:10px;">' + data['メッセージ'] + '</div>' + '<p>' + data['日付'] + '</p>' + '<p>' + data['時刻'] + '</p>' + '<p>' + data['住所'] + '</p>' + '<img src="' + imgsrc + '" height="400">';
-        
-        infoWindow[i] = new google.maps.InfoWindow({
-          content: info
-        });
+            //------------------------------------------------------
+            // マーカークリックイベント
+            //------------------------------------------------------
+            function markerEvent(i) {
+                marker[i].addListener('click', function() {
+                    openWindow(i);
+                });
+            }
 
-        markerEvent(i);
-      }
-
-      function setData(markerData){
-        var elements = [];
-        for (var i = 0; i < markerData.length; i++) {
-          var latitude = markerData[i]['緯度'];
-          if (!latitude) { continue; }
-          addMarker(i, markerData[i]);
-          //var name = markerData[i]['メッセージ'];
-          var date = markerData[i]['日付時刻'];
-          //var addr = markerData[i]['住所'];
-
-          //elements.push(`<b>${i + 1}</b> <a href="javascript:openWindow(${i})">${name}${date}${addr}<\/a><br />`);
-          elements.push(`<b>${i + 1}</b> <a href="javascript:openWindow(${i})">${date}<\/a><br />`);
-        }
-        var sidebar_html = null;
-        if (elements.length > 30) {
-          sidebar_html = elements.slice(elements.length - 30).join("\n");
-        } else {
-          sidebar_html = elements.join("\n");
-        }
-
-        document.getElementById("sidebar").innerHTML = `<a target="_blank" href="https://docs.google.com/spreadsheets/d/1IoLEz-BBe3neez95T0d03QGME7V6JkEoWAyJUfZYgXc/edit?usp=sharing">元データ(Google スプレッドシート)</a><br /><a target="_blank" href="https://github.com/helopon/map">ソースコード(GitHub)</a><br /><br />最新30ヶ所だけを表示<br />` + sidebar_html;
-      }
-
-      function markerEvent(i) {
-        marker[i].addListener('click', function() {
-          openWindow(i);
-        });
-      }
-
-      function openWindow(i) {
-        if(windowOpened){
-          windowOpened.close();
-        }
-        infoWindow[i].open(map, marker[i]);
-        windowOpened = infoWindow[i];
-      }
-    </script>
-  </body>
+            //------------------------------------------------------
+            // マーカークリック時の動作設定
+            //------------------------------------------------------
+            function openWindow(i) {
+                if(windowOpened){
+                    windowOpened.close();
+                }
+                infoWindow[i].open(map, marker[i]);
+                windowOpened = infoWindow[i];
+            }
+      </script>
+    </body>
 </html>
+
