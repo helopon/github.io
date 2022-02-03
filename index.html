@@ -113,8 +113,9 @@
                 }
                 var sidebar_html = null;
                 //サイドバー表示項目数
-                if (elements.length > 15) {
-                    sidebar_html = elements.slice(elements.length - 15).join("\n");
+                var elementsLength = 30;
+                if (elements.length > elementsLength) {
+                    sidebar_html = elements.slice(elements.length - elementsLength).join("\n");
                 } else {
                     sidebar_html = elements.join("\n");
                 }
