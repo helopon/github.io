@@ -34,8 +34,44 @@
             p.sidebarlink {
                 color: blue;
                 text-decoration:underline;
-                /* pointer-events: none;
-                text-decoration: none; */
+            }
+            .btn a {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+                width: 300px;
+                height: 60px;
+                color: #333;
+                font-size: 18px;
+                font-weight: 700;
+                text-decoration: none;
+                transition: 0.3s;
+            }
+            .btn a:hover {
+                color: #f2f2f2;
+            }
+            .textlink a {
+                position: relative;
+                color: #333;
+                text-decoration: none;
+            }
+            .textlink a:hover {
+                color: #b99b00;
+            }
+            .textlink01 a::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                background-color: #ceb849;
+                transform: scaleX(0);
+                transition: transform 0.3s;
+            }
+            .textlink01 a:hover::after {
+                transform: scaleX(1);
             }
         </style>
     </head>
@@ -118,8 +154,12 @@
                     //elements.push(`<b>${i + 1}</b> <a href="javascript:openWindow(${i})">${name}${date}${addr}<\/a><br />`);
                     //elements.push(`<b>${i + 1}</b> <a href="javascript:void(${i});" onclick="openWindow(${i})">${date}<\/a><br />`);    //ポップアップOK 新規ウィンドウ開く
                     //elements.push(`<b>${i + 1}</b> <a onclick="openWindow(${i})">${date}<\/a><br />`);    //ポップアップOK 新規ウィンドウ開かない リンクではない
-                    //elements.push(`<b>${i + 1}</b> <a onclick="openWindow(${i})"> <p class="sidebarlink">${date}</p></a>`);
-                    elements.push(`<b>${i + 1}</b> <a href="javascript:void(${i});" onclick="openWindow(${i})">${date}</a><br/>`);
+                    //elements.push(`<b>${i + 1}</b> <a href="javascript:void(${i});" onclick="openWindow(${i})">${date}</a><br/>`);
+                    //elements.push(`<b>${i + 1}</b> <p class="sidebarlink"> <a onclick="openWindow(${i})"> ${date}</p></a>`);
+                    //elements.push(`<b>${i + 1}</b><br>`);
+                    //elements.push(`<p class="sidebarlink"> <a onclick="openWindow(${i})" > <b>${i + 1}</b>  ${date}</a></p>`);
+                    elements.push(`<p class="textlink textlink01"> <a onclick="openWindow(${i})" > <b>${i + 1}</b>  ${date}</a></p>`);
+                    
                 }
                 var sidebar_html = null;
                 //サイドバー表示項目数
@@ -131,7 +171,7 @@
                 }
                 
                 // サイドバー表示
-                document.getElementById("sidebar").innerHTML = `<a target="_blank" href="https://docs.google.com/spreadsheets/d/1IoLEz-BBe3neez95T0d03QGME7V6JkEoWAyJUfZYgXc/edit?usp=sharing">元データ(Google スプレッドシート)</a><br /><a target="_blank" href="https://github.com/helopon/map">ソースコード(GitHub)</a><br /><br />最新40ヶ所を表示<br />` + sidebar_html;
+                document.getElementById("sidebar").innerHTML = `<a target="_top" href="https://docs.google.com/spreadsheets/d/1IoLEz-BBe3neez95T0d03QGME7V6JkEoWAyJUfZYgXc/edit?usp=sharing">元データ(Google スプレッドシート)</a><br /><a target="_blank" href="https://github.com/helopon/map">ソースコード(GitHub)</a><br /><br />最新40ヶ所を表示<br />` + sidebar_html;
             }
 
             //------------------------------------------------------
