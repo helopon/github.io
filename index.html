@@ -99,11 +99,11 @@
           var latitude = markerData[i]['緯度'];
           if (!latitude) { continue; }
           addMarker(i, markerData[i]);
-          var name = markerData[i]['メッセージ'];
+          //var name = markerData[i]['メッセージ'];
           var date = markerData[i]['日付時刻'];
           var addr = markerData[i]['住所'];
 
-          elements.push(`<b>${i + 1}</b> <a href="javascript:openWindow(${i})">${name}${date}${addr}<\/a><br />`);
+          elements.push(`<b>${i + 1}</b> <a href="javascript:openWindow(${i})">${date}${addr}<\/a><br />`);
         }
         var sidebar_html = null;
         if (elements.length > 15) {
